@@ -1,15 +1,6 @@
 import os
 import random
 
-# draw grid
-# pick random location for player
-# pick random location for exit door
-# pick random location for the monster
-# draw player in the grid
-# take input for movement
-# move player, unless invalid move (past edges of grid)
-# check for win/loss
-# clear screen and redraw grid
 
 CELLS = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0),
          (0, 1), (1, 1), (2, 1), (3, 1), (4, 1),
@@ -76,8 +67,10 @@ def draw_map(player):
 
 def game_loop():
     monster, door, player = get_locations()
-    
-    while True:
+    playing = True
+
+    while playing:
+        clear_screen()
         draw_map(player)
         valid_moves = get_moves(player)
         
@@ -92,9 +85,21 @@ def game_loop():
             break
         if move in valid_moves:
             player = move_player(player, move)
+
+            if player == monster:
+                print("\n ** Oh no! The monster got you ! Better luck next time! **\n")
+                playing = False
+
+            if player == door:
+                print("\n ** You escaped! Congratulations! ** \n")
+                playing = False
+
         else:
             input("\n ** Walls are hard! Don't run into them! **\n")
-        clear_screen()
+    else:
+        if input("Play again? Y/n ").lower() != "n":
+            game_loop()
+       
 
 
 clear_screen()
